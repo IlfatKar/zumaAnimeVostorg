@@ -35,12 +35,9 @@ public class Projectile : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision) {
         if(collision.gameObject.tag == "Ball"){
-            GameObject b = Instantiate(Spawner.BALLPREF, new Vector3(transform.position.x, transform.position.y, -1), 
-            Quaternion.identity);
             Sprite sp = GetComponentInChildren<SpriteRenderer>().sprite;
-            b.SendMessage("SetSprite", sp);
-            int idx = collision.gameObject.GetComponent<Ball>().WaypointIdx;
-            b.SendMessage("SetWaypointIdx", idx);
+            collision.gameObject.SendMessage("ChangeNext", sp);
+            Spawner.Wait();
             Destroy(gameObject);
         }
     }

@@ -8,6 +8,8 @@ public class Ball : MonoBehaviour
     public float MoveSpeed = 2f;
     [HideInInspector]
     public int WaypointIdx = 0;
+    [HideInInspector]
+    public GameObject NextBall = null;
     void Start(){
     }
 
@@ -38,5 +40,16 @@ public class Ball : MonoBehaviour
 
     void SetWaypointIdx(int Idx) {
         WaypointIdx = Idx;
+    }
+
+    void SetNext(GameObject Next) {
+        NextBall = Next;
+    }
+
+    void ChangeNext(Sprite sp) {
+        if (NextBall != null) {
+            NextBall.SendMessage("ChangeNext", GetComponentInChildren<SpriteRenderer>().sprite);
+            GetComponentInChildren<SpriteRenderer>().sprite = sp;
+        }
     }
 }
