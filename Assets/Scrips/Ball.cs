@@ -12,7 +12,7 @@ public class Ball : MonoBehaviour
     }
 
     void Update(){
-       Move();
+        Move();
     }
 
     void Move() {
@@ -26,6 +26,7 @@ public class Ball : MonoBehaviour
             // GAME OVER
         }
     }
+
 
     void SetWaypoints(Transform[] points) {
         Waypoints = points;

@@ -10,16 +10,14 @@ public class Frog : MonoBehaviour
     private float deltaX = 1f;
     private float deltaY = .25f;
 
-    void Start()
-    {
+    void Start() {
         Sprite sprite = Sprites[Random.Range(0, Sprites.Length - 1)];
         Curr = Instantiate(Projectile, new Vector3(transform.position.x + deltaX, transform.position.y + deltaY, 1), transform.rotation);
         Curr.SendMessage("SetSprite", sprite);
     }
 
-    void Update()
-    {
-        OnClick();
+    void Update(){
+        OnClick();   
     }
 
     void OnClick() {
@@ -33,5 +31,6 @@ public class Frog : MonoBehaviour
             Sprite sprite = Sprites[Random.Range(0, Sprites.Length - 1)];
             Curr.SendMessage("SetSprite", sprite);
         }
+
     }
 }
