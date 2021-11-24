@@ -47,7 +47,7 @@ public class Ball : MonoBehaviour
     void ChangeNext(Sprite sp) {
         if (NextBall != null) {
             NextBall.SendMessage("ChangeNext", GetComponentInChildren<SpriteRenderer>().sprite);
-            GetComponentInChildren<SpriteRenderer>().sprite = sp;
         }
+        GetComponentInChildren<SpriteRenderer>().sprite = sp;
     }
 }

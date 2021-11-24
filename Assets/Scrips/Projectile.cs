@@ -39,6 +39,7 @@ public class Projectile : MonoBehaviour
             collision.gameObject.SendMessage("ChangeNext", sp);
             Spawner.Wait();
             Destroy(gameObject);
+            Controller.DestroyBalls();
         }
     }
 }

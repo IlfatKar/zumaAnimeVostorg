@@ -491,6 +491,7 @@ GameObject:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
+  - component: {fileID: 519420030}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -506,6 +507,25 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_Enabled: 1
+--- !u!114 &519420030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 097f5f9282354ce49b820d54d1f12ad2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _ballPrefab: {fileID: 1970157035062756305, guid: 8589fed57b38bc843badda1ccba9d27e, type: 3}
+  _sprites:
+  - {fileID: 21300000, guid: e545cd3f72deeb449b11df6695ba91f3, type: 3}
+  - {fileID: 21300000, guid: 3b95c9d1644b0324583fbb0002f558b5, type: 3}
+  - {fileID: 21300000, guid: 010f71fb647b66247a3162cdd698db87, type: 3}
+  - {fileID: 21300000, guid: 5e35ee4bfa9b7ed4a91ac80ffd70382f, type: 3}
+  - {fileID: 21300000, guid: a8d0d50978ca5174dbcb1d57d680febf, type: 3}
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -1024,6 +1044,10 @@ PrefabInstance:
       value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 4244276078482960878, guid: 459ea224b4382bb4785e4cdae941cbb4, type: 3}
+      propertyPath: _delay
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4244276078482960878, guid: 459ea224b4382bb4785e4cdae941cbb4, type: 3}
       propertyPath: BallPrefab
       value: 
       objectReference: {fileID: 1970157035062756305, guid: 8589fed57b38bc843badda1ccba9d27e, type: 3}
@@ -1089,7 +1113,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4244276078482960879, guid: 459ea224b4382bb4785e4cdae941cbb4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -4
       objectReference: {fileID: 0}
     - target: {fileID: 4244276078482960879, guid: 459ea224b4382bb4785e4cdae941cbb4, type: 3}
       propertyPath: m_LocalPosition.z

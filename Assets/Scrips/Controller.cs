@@ -4,16 +4,46 @@ using UnityEngine;
 
 public class Controller : MonoBehaviour
 {
-   // static public List<GameObject> Balls = new List<GameObject>();
     static public DoublyLinkedList<GameObject> BallsList = new DoublyLinkedList<GameObject>();
     static public GameObject BallPrefab; 
     public GameObject _ballPrefab;
     static public Sprite[] Sprites;
     public Sprite[] _sprites;
+    static private int combo = 0;
 
     void Start() {
         BallPrefab = _ballPrefab;
         Sprites = _sprites;
+    }
+
+    static public void DestroyBalls() {
+        combo = 0;
+        CheckBall(BallsList.head);
+    }
+
+    static private void CheckBall(DoublyNode<GameObject> Node) {
+        if(Node.Next != null && Node.Data.GetComponentInChildren<SpriteRenderer>().sprite.name 
+            == Node.Next.Data.GetComponentInChildren<SpriteRenderer>().sprite.name) {
+            combo++;
+            if(combo >= 3) {
+                DelBalls(Node);  
+            }
+        } 
+        if(Node.Next != null) {
+            CheckBall(Node.Next);
+        }
+    }
+    static private void DelBalls(DoublyNode<GameObject> Node) {
+        if(combo > 0) {
+             if(Node.Previous != null) {
+                Node.Previous.Next = Node.Next != null ? Node.Next.Next : null;
+            } else {
+                BallsList.head = Node.Next != null ? Node.Next : null;
+            }
+            Destroy(Node.Data.gameObject);
+            combo--;
+            DelBalls(Node.Previous);
+        }
     }
 
 }
@@ -115,13 +145,13 @@ public class DoublyLinkedList<T> : IEnumerable<T>  // двусвязный список
             count = 0;
         }
  
-        public bool Contains(T data)
+        public dynamic  Contains(T data)
         {
             DoublyNode<T> current = head;
             while (current != null)
             {
                 if (current.Data.Equals(data))
-                    return true;
+                    return current;
                 current = current.Next;
             }
             return false;
