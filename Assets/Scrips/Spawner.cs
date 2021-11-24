@@ -10,8 +10,10 @@ public class Spawner : MonoBehaviour
     float DelayTimer = 0;
     private List<GameObject> Balls = new List<GameObject>();
     public Sprite[] Sprites;
-
-    void Start(){}
+    public static GameObject BALLPREF; 
+    void Start(){
+        BALLPREF = BallPrefab;
+    }
 
 
     void Update(){

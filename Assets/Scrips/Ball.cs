@@ -4,28 +4,21 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-  //  public List<Color> Colors;
-    // Start is called before the first frame update
     static public Transform[] Waypoints;
     public float MoveSpeed = 2f;
-    private int WaypointIdx = 0;
+    [HideInInspector]
+    public int WaypointIdx = 0;
     void Start(){
     }
 
-    // Update is called once per frame
     void Update(){
        Move();
     }
 
-    void SetSprite(Sprite sp) {
-         GetComponentInChildren<SpriteRenderer>().sprite = sp;
-    }
-
-
     void Move() {
          transform.position = Vector2.MoveTowards(transform.position,
             Waypoints[WaypointIdx].transform.position, MoveSpeed * Time.deltaTime);
-        if(transform.position == Waypoints[WaypointIdx].transform.position) {
+        if(Vector2.Distance(transform.position, Waypoints[WaypointIdx].transform.position) <= 1f) {
             WaypointIdx++;
         }
         if (WaypointIdx == Waypoints.Length) {
@@ -36,5 +29,13 @@ public class Ball : MonoBehaviour
 
     void SetWaypoints(Transform[] points) {
         Waypoints = points;
+    }
+
+    void SetSprite(Sprite sp) {
+         GetComponentInChildren<SpriteRenderer>().sprite = sp;
+    }
+
+    void SetWaypointIdx(int Idx) {
+        WaypointIdx = Idx;
     }
 }
