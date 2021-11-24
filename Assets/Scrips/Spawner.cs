@@ -11,9 +11,7 @@ public class Spawner : MonoBehaviour
     private List<GameObject> Balls = new List<GameObject>();
     public Sprite[] Sprites;
 
-    void Start(){
-        
-    }
+    void Start(){}
 
 
     void Update(){
@@ -28,7 +26,7 @@ public class Spawner : MonoBehaviour
             Quaternion.identity);
         b.SendMessage("SetWaypoints", Waypoints);
         Sprite sp = Sprites[Random.Range(0, Sprites.Length - 1)];
-        while (Balls.Count > 3 && sp.name == Balls[Balls.Count - 1].GetComponentInChildren<SpriteRenderer>().sprite.name && 
+        while (Balls.Count >= 3 && sp.name == Balls[Balls.Count - 1].GetComponentInChildren<SpriteRenderer>().sprite.name && 
             sp.name == Balls[Balls.Count - 2].GetComponentInChildren<SpriteRenderer>().sprite.name) {
             sp = Sprites[Random.Range(0, Sprites.Length - 1)];
         }
