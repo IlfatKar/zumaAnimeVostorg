@@ -2,16 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Frog : MonoBehaviour
-{
-    public Sprite[] Sprites;
+public class Frog : MonoBehaviour {
     private GameObject Curr;
     public GameObject Projectile;
     private float deltaX = 1f;
     private float deltaY = .25f;
 
     void Start() {
-        Sprite sprite = Sprites[Random.Range(0, Sprites.Length - 1)];
+        Sprite sprite = Controller.Sprites[Random.Range(0, Controller.Sprites.Length - 1)];
         Curr = Instantiate(Projectile, new Vector3(transform.position.x + deltaX, transform.position.y + deltaY, 1), transform.rotation);
         Curr.SendMessage("SetSprite", sprite);
     }
@@ -28,9 +26,8 @@ public class Frog : MonoBehaviour
             Angle = transform.position.y < MousePosition.y ? Angle : -Angle;
             Curr.SendMessage("Push", Angle);
             Curr = Instantiate(Projectile, new Vector3(transform.position.x + deltaX, transform.position.y + deltaY, 1), transform.rotation);
-            Sprite sprite = Sprites[Random.Range(0, Sprites.Length - 1)];
+            Sprite sprite = Controller.Sprites[Random.Range(0, Controller.Sprites.Length - 1)];
             Curr.SendMessage("SetSprite", sprite);
         }
-
     }
 }

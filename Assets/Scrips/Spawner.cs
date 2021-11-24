@@ -4,19 +4,13 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    public GameObject BallPrefab;
     public Transform[] Waypoints;
     static public float Delay = 0.5f;
     public float _delay = 0.5f;
     float DelayTimer = 0;
     static private float FirstDelay = 0.5f;
-    private List<GameObject> Balls = new List<GameObject>();
-    public Sprite[] Sprites;
-    [HideInInspector]
-    public static GameObject BALLPREF; 
     static private bool isDelayX = false; 
     void Start(){
-        BALLPREF = BallPrefab;
         Delay = _delay;
         FirstDelay = Delay;
     }
@@ -33,19 +27,19 @@ public class Spawner : MonoBehaviour
         }
     }
     void Spawn() {
-        GameObject b = Instantiate(BallPrefab, new Vector3(transform.position.x, transform.position.y, -1), 
+        GameObject b = Instantiate(Controller.BallPrefab, new Vector3(transform.position.x, transform.position.y, -1), 
             Quaternion.identity);
-        if (Balls.Count >= 1) {
-            Balls[Balls.Count - 1].SendMessage("SetNext", b);
+        if (Controller.BallsList.count >= 1) {
+            Controller.BallsList.tail.Data.SendMessage("SetNext", b);
         }
         b.SendMessage("SetWaypoints", Waypoints);
-        Sprite sp = Sprites[Random.Range(0, Sprites.Length - 1)];
-        while (Balls.Count >= 3 && sp.name == Balls[Balls.Count - 1].GetComponentInChildren<SpriteRenderer>().sprite.name && 
-            sp.name == Balls[Balls.Count - 2].GetComponentInChildren<SpriteRenderer>().sprite.name) {
-            sp = Sprites[Random.Range(0, Sprites.Length - 1)];
+        Sprite sp = Controller.Sprites[Random.Range(0, Controller.Sprites.Length - 1)];
+        while (Controller.BallsList.count >= 3 && sp.name == Controller.BallsList.tail.Data.GetComponentInChildren<SpriteRenderer>().sprite.name && 
+            sp.name == Controller.BallsList.tail.Previous.Data.GetComponentInChildren<SpriteRenderer>().sprite.name) {
+            sp = Controller.Sprites[Random.Range(0, Controller.Sprites.Length - 1)];
         }
         b.SendMessage("SetSprite", sp);
-        Balls.Add(b);
+        Controller.BallsList.Add(b);
     }
     
     static public void Wait() {

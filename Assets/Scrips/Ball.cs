@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    static public Transform[] Waypoints;
+    private Transform[] Waypoints;
     public float MoveSpeed = 2f;
     [HideInInspector]
     public int WaypointIdx = 0;
     [HideInInspector]
     public GameObject NextBall = null;
-    void Start(){
-    }
 
     void Update(){
         Move();
