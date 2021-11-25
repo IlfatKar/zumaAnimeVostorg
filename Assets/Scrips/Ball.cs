@@ -43,10 +43,7 @@ public class Ball : MonoBehaviour
         NextBall = Next;
     }
 
-    void ChangeNext(Sprite sp) {
-        if (NextBall != null) {
-            NextBall.SendMessage("ChangeNext", GetComponentInChildren<SpriteRenderer>().sprite);
-        }
-        GetComponentInChildren<SpriteRenderer>().sprite = sp;
+    void GoBack() {
+        WaypointIdx--;
     }
 }

@@ -21,42 +21,35 @@ public class Controller : MonoBehaviour
         if (CurrBall is DoublyNode<GameObject>) {
             if(CurrBall != BallsList.head && CurrBall != BallsList.tail){
                 if (NodeGetSprite(CurrBall) == NodeGetSprite(CurrBall.Next) && NodeGetSprite(CurrBall.Previous) == NodeGetSprite(CurrBall)) {
-                    Destroy(CurrBall.Data.gameObject);
-                    Destroy(CurrBall.Next.Data.gameObject);
-                    Destroy(CurrBall.Previous.Data.gameObject);
-                    BallsList.Remove(CurrBall.Data);
-                    BallsList.Remove(CurrBall.Next.Data);
-                    BallsList.Remove(CurrBall.Previous.Data);
+                    DestroyAndRemove(CurrBall, CurrBall.Next, CurrBall.Previous);
+                    CurrBall.Previous.Previous.Data.SendMessage("GoBack");
                     return;
                 }
             } 
             if (CurrBall.Next != null && CurrBall.Next.Next != null) {
                 if (NodeGetSprite(CurrBall) == NodeGetSprite(CurrBall.Next) && NodeGetSprite(CurrBall.Next.Next) == NodeGetSprite(CurrBall)) {
-                    Destroy(CurrBall.Data.gameObject);
-                    Destroy(CurrBall.Next.Data.gameObject);
-                    Destroy(CurrBall.Next.Next.Data.gameObject);
-                    BallsList.Remove(CurrBall.Data);
-                    BallsList.Remove(CurrBall.Next.Data);
-                    BallsList.Remove(CurrBall.Next.Next.Data);
-
+                    DestroyAndRemove(CurrBall, CurrBall.Next, CurrBall.Next.Next);
+                    CurrBall.Previous.Data.SendMessage("GoBack");
                     return;
                 }
             }
             if (CurrBall.Previous != null && CurrBall.Previous.Previous != null) {
                 if (NodeGetSprite(CurrBall) == NodeGetSprite(CurrBall.Previous) && NodeGetSprite(CurrBall.Previous.Previous) == NodeGetSprite(CurrBall)) {
-                    Destroy(CurrBall.Data.gameObject);
-                    Destroy(CurrBall.Previous.Data.gameObject);
-                    Destroy(CurrBall.Previous.Previous.Data.gameObject);
-                    BallsList.Remove(CurrBall.Data);
-                    BallsList.Remove(CurrBall.Previous.Data);
-                    BallsList.Remove(CurrBall.Previous.Previous.Data);
-                    
+                    DestroyAndRemove(CurrBall, CurrBall.Previous, CurrBall.Previous.Previous);
+                    CurrBall.Previous.Previous.PreviousData.SendMessage("GoBack");
                     return;
                 }
             }
-            
         }
-        //CheckBall(BallsList.head);
+    }
+
+    static private void DestroyAndRemove(DoublyNode<GameObject> Node1, DoublyNode<GameObject> Node2, DoublyNode<GameObject> Node3) {
+         Destroy(Node1.Data.gameObject);
+         Destroy(Node2.Data.gameObject);
+         Destroy(Node3.Data.gameObject);
+         BallsList.Remove(Node1.Data);
+         BallsList.Remove(Node2.Data);
+         BallsList.Remove(Node3.Data);
     }
 
     static public void ChangeColors(DoublyNode<GameObject> Node, Sprite sp) {
