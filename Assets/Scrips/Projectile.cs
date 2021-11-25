@@ -45,7 +45,8 @@ public class Projectile : MonoBehaviour
             Destroy(gameObject);
 
             Controller.ChangeColors(collision.gameObject, sp);
-            Controller.DestroyBalls(collision.gameObject);
+            //Controller.DestroyBalls(collision.gameObject);
+            Controller.DestroyBalls();
  
             Spawner.Wait();
         }

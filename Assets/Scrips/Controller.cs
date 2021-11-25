@@ -32,7 +32,36 @@ public class Controller : MonoBehaviour
         return true;
     }
 
-    static public void DestroyBalls(GameObject curr) {
+    static public void DestroyBalls() {
+        DoublyNode<GameObject> Node = BallsList.head;
+        int combo = 0;
+        string lastSprite = "";
+        while(Node.Next != null) {
+            if (lastSprite == Node.Data.GetComponentInChildren<SpriteRenderer>().sprite.name) {
+                combo++;
+            } else {
+                if (combo >= 2) {
+                    DoublyNode<GameObject> tmp = Node.Previous;
+                    for (int i = 0; i <= combo; i++) {
+                        Destroy(tmp.Data.gameObject);
+                        BallsList.Remove(tmp.Data);
+                        tmp = tmp.Previous;
+                    } 
+                    tmp = Node;
+                    while (tmp != null) {
+                        tmp.Data.SendMessage("GoBack");
+                        tmp = tmp.Previous;
+                    }
+                    audios[1].Play();
+                } 
+                combo = 0;
+            }
+            lastSprite = Node.Data.GetComponentInChildren<SpriteRenderer>().sprite.name;
+            Node = Node.Next;
+        }
+    }
+
+    static public void _DestroyBalls(GameObject curr) {
         DoublyNode<GameObject> CurrBall = BallsList.Contains(curr);
 
         // PIZDEC NEED FIX
