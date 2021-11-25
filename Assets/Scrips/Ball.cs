@@ -6,6 +6,7 @@ public class Ball : MonoBehaviour
 {
     private Transform[] Waypoints;
     public float MoveSpeed = 2f;
+    public float MoveSpeedMult = 1f;
     [HideInInspector]
     public int WaypointIdx = 0;
     [HideInInspector]
@@ -13,6 +14,7 @@ public class Ball : MonoBehaviour
     [HideInInspector]
     public DoublyNode<GameObject> BallInList = null;
     public float MaxDistance = 1.3f;
+    private bool isHidden = false;
     void Update(){
         if (!isStop) {
             Move();
@@ -20,7 +22,12 @@ public class Ball : MonoBehaviour
             if (Controller.DistanceToNext(BallInList) < MaxDistance && Controller.IsNextsMove(BallInList)) {
                 isStop = false;
             }
-        }  
+        }
+        if (isHidden) {
+            if (Controller.DistanceToPrev(BallInList) < MaxDistance) {
+                SetHidden(false);
+            }
+        }
     }
 
     private void Start(){
@@ -36,14 +43,13 @@ public class Ball : MonoBehaviour
 
     void Move() {
         transform.position = Vector2.MoveTowards(transform.position,
-            Waypoints[WaypointIdx].transform.position, MoveSpeed * Time.deltaTime);
+            Waypoints[WaypointIdx].transform.position, MoveSpeed * MoveSpeedMult * Time.deltaTime);
         if(Vector2.Distance(transform.position, Waypoints[WaypointIdx].transform.position) <= .5f) {
             WaypointIdx++;
         }
         if (WaypointIdx == Waypoints.Length) {
             WaypointIdx = 0;
             Controller.GameOver();
-            // GAME OVER
         }
     }
 
@@ -67,4 +73,14 @@ public class Ball : MonoBehaviour
         isStop = true;
     }
 
+    void SetHidden(bool b) {
+        GetComponentInChildren<SpriteRenderer>().color = b ? new Color(255,255,255,0) : new Color(255,255,255,1);
+        if (b) {
+            isHidden = true;
+            MoveSpeedMult = 20f;
+        } else {
+            isHidden = false;
+            MoveSpeedMult = 1f;
+        }
+    }
 }

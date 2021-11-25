@@ -32,6 +32,14 @@ public class Controller : MonoBehaviour
         }
     }
 
+     static public float DistanceToPrev(DoublyNode<GameObject> curr) {
+        if (curr.Previous != null) {
+            return Vector2.Distance(curr.Data.transform.position, curr.Previous.Data.transform.position);
+        } else {
+            return 0f;
+        }
+    }
+
     static public bool IsNextsMove(DoublyNode<GameObject> curr) {
         DoublyNode<GameObject> c = curr;
         if (c.Next != null && c.Next.Data.GetComponent<Ball>().isStop) {
@@ -67,7 +75,21 @@ public class Controller : MonoBehaviour
             lastSprite = Node.Data.GetComponentInChildren<SpriteRenderer>().sprite.name;
             Node = Node.Next;
         }
-        if (BallsList.count == 0) {
+        if(combo >= 2) {
+            DoublyNode<GameObject> tmp = Node.Previous;
+            for (int i = 0; i <= combo; i++) {
+                Destroy(tmp.Data.gameObject);
+                BallsList.Remove(tmp.Data);
+                tmp = tmp.Previous;
+            } 
+            tmp = Node;
+            while (tmp != null) {
+                tmp.Data.SendMessage("GoBack");
+                tmp = tmp.Previous;
+            }
+            audios[1].Play();
+        }
+        if (BallsList.count <= 1) {
             GameWin();
         }
     }
@@ -78,6 +100,7 @@ public class Controller : MonoBehaviour
     }
 
     static public void GameWin() {
+        GameObject.Destroy(BallsList.head.Data);
         Time.timeScale = 0;
         Win.SetActive(true);
     }
@@ -85,13 +108,10 @@ public class Controller : MonoBehaviour
     static public void ChangeColors(DoublyNode<GameObject> Node, Sprite sp) {
         if (Node.Next != null) {
             ChangeColors(Node.Next, Node.Data.GetComponentInChildren<SpriteRenderer>().sprite);
-        } /*else {
+        } else {
             GameObject spawner = GameObject.Find("Spawner");
-            spawner.GetComponent<Spawner>().SpawnFromController(
-                Node.Data.GetComponentInChildren<SpriteRenderer>().sprite, 
-                Node.Data.GetComponent<Ball>().LastPos[0],
-                Node.Data.GetComponent<Ball>().WaypointIdx);  
-        } */
+            spawner.GetComponent<Spawner>().SpawnFromController(Node.Data.GetComponentInChildren<SpriteRenderer>().sprite);  
+        } 
         Node.Data.GetComponentInChildren<SpriteRenderer>().sprite = sp;
     }
 
@@ -101,7 +121,10 @@ public class Controller : MonoBehaviour
         if (CurrNode is DoublyNode<GameObject>) {
             if (CurrNode.Next != null) {
                 ChangeColors(CurrNode.Next, CurrNode.Data.GetComponentInChildren<SpriteRenderer>().sprite);
-            }         
+            } else {
+                GameObject spawner = GameObject.Find("Spawner");
+                spawner.GetComponent<Spawner>().SpawnFromController(CurrNode.Data.GetComponentInChildren<SpriteRenderer>().sprite);  
+            }      
             
             CurrNode.Data.GetComponentInChildren<SpriteRenderer>().sprite = sp;
         }

@@ -46,14 +46,14 @@ public class Spawner : MonoBehaviour
         SpawnedCount++;
     }
 
-    public void SpawnFromController(Sprite sprite, Vector3 pos, int WaypointIdx) {
-        GameObject b = Instantiate(Controller.BallPrefab, pos, Quaternion.identity);
+    public void SpawnFromController(Sprite sprite) {
+        GameObject b = Instantiate(Controller.BallPrefab, new Vector3(transform.position.x, transform.position.y, -1), Quaternion.identity);
         b.SendMessage("SetWaypoints", Waypoints);
-        b.SendMessage("SetWaypointIdx", WaypointIdx);
 
         b.SendMessage("SetSprite", sprite);
 
         Controller.BallsList.Add(b);
+        b.SendMessage("SetHidden", true);
         b.SendMessage("SetBallInList", Controller.BallsList.tail);
     }
 
