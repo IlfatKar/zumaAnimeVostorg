@@ -5,6 +5,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     private bool isMove = false;
+    [HideInInspector]
     public Vector3 direction = Vector3.right;
     public float shotSpeed = 4f;
     void Start(){}    
@@ -12,13 +13,7 @@ public class Projectile : MonoBehaviour
     void Update(){
         if (isMove) {
             Move();
-        } else {
-            Rotate();
-        }
-    }
-
-    void Rotate() {
-     
+        } 
     }
 
     void Move() {

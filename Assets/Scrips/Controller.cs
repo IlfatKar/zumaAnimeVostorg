@@ -16,10 +16,31 @@ public class Controller : MonoBehaviour
         audios = GetComponents<AudioSource>();
     }
 
-    static public void DestroyBalls(GameObject curr) {
-        var CurrBall = BallsList.Contains(curr);
+    static public float DistanceToNext(DoublyNode<GameObject> curr) {
+        if (curr.Next != null) {
+            return Vector2.Distance(curr.Data.transform.position, curr.Next.Data.transform.position);
+        } else {
+            return 0f;
+        }
+    }
 
-        if (CurrBall is DoublyNode<GameObject>) {
+    static public bool IsNextsMove(DoublyNode<GameObject> curr) {
+        DoublyNode<GameObject> c = curr;
+        if (c.Next != null && c.Next.Data.GetComponent<Ball>().isStop) {
+            return false;
+        }
+        //if(c.Next != null && DistanceToNext(c) < c.Data.GetComponent<Ball>().MaxDistance) {
+        //    IsNextsMove(c.Next); 
+        //}
+       
+        return true;
+    }
+
+    static public void DestroyBalls(GameObject curr) {
+        DoublyNode<GameObject> CurrBall = BallsList.Contains(curr);
+
+        // PIZDEC
+        if (CurrBall != null) {
             if(CurrBall != BallsList.head && CurrBall != BallsList.tail){
                 if (NodeGetSprite(CurrBall) == NodeGetSprite(CurrBall.Next) && NodeGetSprite(CurrBall.Previous) == NodeGetSprite(CurrBall)) {
                     DestroyAndRemove(CurrBall, CurrBall.Next, CurrBall.Previous);

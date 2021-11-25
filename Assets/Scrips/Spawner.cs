@@ -29,9 +29,6 @@ public class Spawner : MonoBehaviour
     void Spawn() {
         GameObject b = Instantiate(Controller.BallPrefab, new Vector3(transform.position.x, transform.position.y, -1), 
             Quaternion.identity);
-        if (Controller.BallsList.count >= 1) {
-            Controller.BallsList.tail.Data.SendMessage("SetNext", b);
-        }
         b.SendMessage("SetWaypoints", Waypoints);
         Sprite sp = Controller.Sprites[Random.Range(0, Controller.Sprites.Length )];
 
@@ -42,6 +39,7 @@ public class Spawner : MonoBehaviour
 
         b.SendMessage("SetSprite", sp);
         Controller.BallsList.Add(b);
+        b.SendMessage("SetBallInList", Controller.BallsList.tail);
     }
 
     static public void Wait() {

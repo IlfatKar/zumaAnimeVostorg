@@ -9,20 +9,26 @@ public class Ball : MonoBehaviour
     [HideInInspector]
     public int WaypointIdx = 0;
     [HideInInspector]
-    public GameObject NextBall = null;
-    private bool isStop = false;
+    public bool isStop = false;
+    [HideInInspector]
+    public DoublyNode<GameObject> BallInList = null;
+    public float MaxDistance = 1.3f;
 
     void Update(){
         if (!isStop) {
             Move();
-        }
+        } else {
+            if (Controller.DistanceToNext(BallInList) < MaxDistance && Controller.IsNextsMove(BallInList)) {
+                isStop = false;
+            }
+        }  
     }
+
 
     void Move() {
         transform.position = Vector2.MoveTowards(transform.position,
             Waypoints[WaypointIdx].transform.position, MoveSpeed * Time.deltaTime);
         if(Vector2.Distance(transform.position, Waypoints[WaypointIdx].transform.position) <= .5f) {
-            //Rotate();
             WaypointIdx++;
         }
         if (WaypointIdx == Waypoints.Length) {
@@ -43,14 +49,8 @@ public class Ball : MonoBehaviour
         WaypointIdx = Idx;
     }
 
-    void OnCollisionEnter2D(Collision2D collision) {
-        if (isStop && collision.gameObject.tag != "Line") {
-            isStop = false;
-        }
-    }
-
-    void SetNext(GameObject Next) {
-        NextBall = Next;
+    void SetBallInList(DoublyNode<GameObject> ball) {
+        BallInList = ball;
     }
 
     void GoBack() {

@@ -5,13 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class StartGame : MonoBehaviour { 
 
-    // Update is called once per frame
-    void Update()
-    {
-       
-       
-    }
      void OnMouseDown() {
-             SceneManager.LoadScene("FirstLevel");
-        }
+        SceneManager.LoadScene("FirstLevel");
+     }
 }

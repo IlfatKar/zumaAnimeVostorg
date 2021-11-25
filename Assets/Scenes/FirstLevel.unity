@@ -1386,9 +1386,9 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 26762a2c79055054185f02b385dca216, type: 3}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
+  m_PlayOnAwake: 0
+  m_Volume: 0.862
+  m_Pitch: 1.34
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -1566,7 +1566,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: cc6f2c79548fff0409c33f5143152fc5, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.095
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -1723,6 +1723,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6231859500487501393, guid: 007eecb601c15074db9c4b9ff0ba7186, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 6231859501538430361, guid: 007eecb601c15074db9c4b9ff0ba7186, type: 3}
       propertyPath: m_Name
       value: Frog
