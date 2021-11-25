@@ -12,7 +12,8 @@ public class Frog : MonoBehaviour {
         Curr.SendMessage("SetSprite", sprite);
     }
 
-    void Update(){
+    void Update() {
+        
         OnClick();
         Rotate();
     }
@@ -40,8 +41,8 @@ public class Frog : MonoBehaviour {
             float Angle = GetAngleToMouse();
 
             Curr.SendMessage("Push", Angle);
-            Curr = Instantiate(Projectile, new Vector3(transform.position.x, transform.position.y, -1), transform.rotation);
             Sprite sprite = Controller.Sprites[Random.Range(0, Controller.Sprites.Length)];
+            Curr = Instantiate(Projectile, new Vector3(transform.position.x, transform.position.y, -1), transform.rotation);
             Curr.SendMessage("SetSprite", sprite);
         }
     }

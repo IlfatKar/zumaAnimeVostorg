@@ -88,7 +88,10 @@ public class Controller : MonoBehaviour
             ChangeColors(Node.Next, Node.Data.GetComponentInChildren<SpriteRenderer>().sprite);
         } else {
             GameObject spawner = GameObject.Find("Spawner");
-            spawner.GetComponent<Spawner>().SpawnFromController(Node.Data.GetComponentInChildren<SpriteRenderer>().sprite, Node.Data.GetComponent<Ball>().LastPos[0], Node.Data.GetComponent<Ball>().WaypointIdx);  
+            spawner.GetComponent<Spawner>().SpawnFromController(
+                Node.Data.GetComponentInChildren<SpriteRenderer>().sprite, 
+                Node.Data.GetComponent<Ball>().LastPos[1],
+                Node.Data.GetComponent<Ball>().WaypointIdx);  
         }
         Node.Data.GetComponentInChildren<SpriteRenderer>().sprite = sp;
     }
