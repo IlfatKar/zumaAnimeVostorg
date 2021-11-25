@@ -7,7 +7,7 @@ public class Frog : MonoBehaviour {
     public GameObject Projectile;
 
     void Start() {
-        Sprite sprite = Controller.Sprites[Random.Range(0, Controller.Sprites.Length - 1)];
+        Sprite sprite = Controller.Sprites[Random.Range(0, Controller.Sprites.Length)];
         Curr = Instantiate(Projectile, new Vector3(transform.position.x, transform.position.y, -1), transform.rotation);
         Curr.SendMessage("SetSprite", sprite);
     }

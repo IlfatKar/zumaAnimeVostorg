@@ -33,11 +33,11 @@ public class Spawner : MonoBehaviour
             Controller.BallsList.tail.Data.SendMessage("SetNext", b);
         }
         b.SendMessage("SetWaypoints", Waypoints);
-        Sprite sp = Controller.Sprites[Random.Range(0, Controller.Sprites.Length - 1)];
+        Sprite sp = Controller.Sprites[Random.Range(0, Controller.Sprites.Length )];
 
          while (Controller.BallsList.count >= 2 && sp.name == Controller.BallsList.tail.Data.GetComponentInChildren<SpriteRenderer>().sprite.name && 
             sp.name == Controller.BallsList.tail.Previous.Data.GetComponentInChildren<SpriteRenderer>().sprite.name) {
-            sp = Controller.Sprites[Random.Range(0, Controller.Sprites.Length - 1)];
+            sp = Controller.Sprites[Random.Range(0, Controller.Sprites.Length )];
         }
 
         b.SendMessage("SetSprite", sp);
