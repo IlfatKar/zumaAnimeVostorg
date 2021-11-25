@@ -9,10 +9,11 @@ public class Controller : MonoBehaviour
     public GameObject _ballPrefab;
     static public Sprite[] Sprites;
     public Sprite[] _sprites;
-
+    static private AudioSource[] audios;
     void Awake() {
         Sprites = _sprites;
         BallPrefab = _ballPrefab;
+        audios = GetComponents<AudioSource>();
     }
 
     static public void DestroyBalls(GameObject curr) {
@@ -22,21 +23,33 @@ public class Controller : MonoBehaviour
             if(CurrBall != BallsList.head && CurrBall != BallsList.tail){
                 if (NodeGetSprite(CurrBall) == NodeGetSprite(CurrBall.Next) && NodeGetSprite(CurrBall.Previous) == NodeGetSprite(CurrBall)) {
                     DestroyAndRemove(CurrBall, CurrBall.Next, CurrBall.Previous);
-                    CurrBall.Previous.Previous.Data.SendMessage("GoBack");
+                    DoublyNode<GameObject> c = CurrBall.Previous;
+                    while (c != null) {
+                        c.Data.SendMessage("GoBack");
+                        c = c.Previous;
+                    }
                     return;
                 }
             } 
             if (CurrBall.Next != null && CurrBall.Next.Next != null) {
                 if (NodeGetSprite(CurrBall) == NodeGetSprite(CurrBall.Next) && NodeGetSprite(CurrBall.Next.Next) == NodeGetSprite(CurrBall)) {
                     DestroyAndRemove(CurrBall, CurrBall.Next, CurrBall.Next.Next);
-                    CurrBall.Previous.Data.SendMessage("GoBack");
+                    DoublyNode<GameObject> c = CurrBall;
+                    while (c != null) {
+                        c.Data.SendMessage("GoBack");
+                        c = c.Previous;
+                    }
                     return;
                 }
             }
             if (CurrBall.Previous != null && CurrBall.Previous.Previous != null) {
                 if (NodeGetSprite(CurrBall) == NodeGetSprite(CurrBall.Previous) && NodeGetSprite(CurrBall.Previous.Previous) == NodeGetSprite(CurrBall)) {
                     DestroyAndRemove(CurrBall, CurrBall.Previous, CurrBall.Previous.Previous);
-                    CurrBall.Previous.Previous.PreviousData.SendMessage("GoBack");
+                    DoublyNode<GameObject> c = CurrBall.Previous.Previous;
+                    while (c != null) {
+                        c.Data.SendMessage("GoBack");
+                        c = c.Previous;
+                    }
                     return;
                 }
             }
@@ -50,6 +63,7 @@ public class Controller : MonoBehaviour
          BallsList.Remove(Node1.Data);
          BallsList.Remove(Node2.Data);
          BallsList.Remove(Node3.Data);
+        audios[1].Play();
     }
 
     static public void ChangeColors(DoublyNode<GameObject> Node, Sprite sp) {
@@ -60,14 +74,14 @@ public class Controller : MonoBehaviour
     }
 
     static public void ChangeColors(GameObject curr, Sprite sp) {
-        var CurrNode = BallsList.Contains(curr);
+        audios[0].Play();
+        DoublyNode<GameObject> CurrNode = BallsList.Contains(curr);
         if (CurrNode is DoublyNode<GameObject>) {
             if (CurrNode.Next != null) {
                 ChangeColors(CurrNode.Next, CurrNode.Data.GetComponentInChildren<SpriteRenderer>().sprite);
             }
             CurrNode.Data.GetComponentInChildren<SpriteRenderer>().sprite = sp;
         }
-        
     }
 
     static private string NodeGetSprite(DoublyNode<GameObject> Node) {
@@ -172,7 +186,7 @@ public class DoublyLinkedList<T> : IEnumerable<T>  // двусвязный список
             count = 0;
         }
  
-        public dynamic  Contains(T data)
+        public DoublyNode<T> Contains(T data)
         {
             DoublyNode<T> current = head;
             while (current != null)
@@ -181,7 +195,7 @@ public class DoublyLinkedList<T> : IEnumerable<T>  // двусвязный список
                     return current;
                 current = current.Next;
             }
-            return false;
+            return null;
         }
          
         IEnumerator IEnumerable.GetEnumerator()

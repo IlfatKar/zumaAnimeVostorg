@@ -10,15 +10,19 @@ public class Ball : MonoBehaviour
     public int WaypointIdx = 0;
     [HideInInspector]
     public GameObject NextBall = null;
+    private bool isStop = false;
 
     void Update(){
-        Move();
+        if (!isStop) {
+            Move();
+        }
     }
 
     void Move() {
-         transform.position = Vector2.MoveTowards(transform.position,
+        transform.position = Vector2.MoveTowards(transform.position,
             Waypoints[WaypointIdx].transform.position, MoveSpeed * Time.deltaTime);
-        if(Vector2.Distance(transform.position, Waypoints[WaypointIdx].transform.position) <= 1f) {
+        if(Vector2.Distance(transform.position, Waypoints[WaypointIdx].transform.position) <= .5f) {
+            //Rotate();
             WaypointIdx++;
         }
         if (WaypointIdx == Waypoints.Length) {
@@ -39,11 +43,18 @@ public class Ball : MonoBehaviour
         WaypointIdx = Idx;
     }
 
+    void OnCollisionEnter2D(Collision2D collision) {
+        if (isStop && collision.gameObject.tag != "Line") {
+            isStop = false;
+        }
+    }
+
     void SetNext(GameObject Next) {
         NextBall = Next;
     }
 
     void GoBack() {
-        WaypointIdx--;
+        isStop = true;
     }
+
 }
