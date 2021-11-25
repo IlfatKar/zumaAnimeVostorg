@@ -10,6 +10,8 @@ public class Spawner : MonoBehaviour
     float DelayTimer = 0;
     static private float FirstDelay = 0.5f;
     static private bool isDelayX = false; 
+    public int MaxBalls = 30;
+    private int SpawnedCount = 0;
     void Start(){
         Delay = _delay;
         FirstDelay = Delay;
@@ -17,7 +19,7 @@ public class Spawner : MonoBehaviour
 
     void Update(){
         DelayTimer += Time.deltaTime;
-        if (DelayTimer >= Delay) {
+        if (DelayTimer >= Delay && SpawnedCount < MaxBalls) {
             DelayTimer -= Delay;
             Spawn();
         }
@@ -38,6 +40,17 @@ public class Spawner : MonoBehaviour
         }
 
         b.SendMessage("SetSprite", sp);
+        Controller.BallsList.Add(b);
+        b.SendMessage("SetBallInList", Controller.BallsList.tail);
+        SpawnedCount++;
+    }
+
+    public void SpawnFromController(Sprite sprite, Vector3 pos) {
+        GameObject b = Instantiate(Controller.BallPrefab, pos, Quaternion.identity);
+        b.SendMessage("SetWaypoints", Waypoints);
+
+        b.SendMessage("SetSprite", sprite);
+
         Controller.BallsList.Add(b);
         b.SendMessage("SetBallInList", Controller.BallsList.tail);
     }

@@ -41,12 +41,12 @@ public class Projectile : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision) {
         if(collision.gameObject.tag == "Ball"){
             Sprite sp = GetComponentInChildren<SpriteRenderer>().sprite;
-
             
             Destroy(gameObject);
 
             Controller.ChangeColors(collision.gameObject, sp);
             Controller.DestroyBalls(collision.gameObject);
+ 
             Spawner.Wait();
         }
     }

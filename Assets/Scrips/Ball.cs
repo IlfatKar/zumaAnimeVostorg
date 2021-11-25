@@ -24,7 +24,6 @@ public class Ball : MonoBehaviour
         }  
     }
 
-
     void Move() {
         transform.position = Vector2.MoveTowards(transform.position,
             Waypoints[WaypointIdx].transform.position, MoveSpeed * Time.deltaTime);

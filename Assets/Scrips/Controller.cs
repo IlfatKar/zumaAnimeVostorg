@@ -29,17 +29,13 @@ public class Controller : MonoBehaviour
         if (c.Next != null && c.Next.Data.GetComponent<Ball>().isStop) {
             return false;
         }
-        //if(c.Next != null && DistanceToNext(c) < c.Data.GetComponent<Ball>().MaxDistance) {
-        //    IsNextsMove(c.Next); 
-        //}
-       
         return true;
     }
 
     static public void DestroyBalls(GameObject curr) {
         DoublyNode<GameObject> CurrBall = BallsList.Contains(curr);
 
-        // PIZDEC
+        // PIZDEC NEED FIX
         if (CurrBall != null) {
             if(CurrBall != BallsList.head && CurrBall != BallsList.tail){
                 if (NodeGetSprite(CurrBall) == NodeGetSprite(CurrBall.Next) && NodeGetSprite(CurrBall.Previous) == NodeGetSprite(CurrBall)) {
@@ -84,12 +80,15 @@ public class Controller : MonoBehaviour
          BallsList.Remove(Node1.Data);
          BallsList.Remove(Node2.Data);
          BallsList.Remove(Node3.Data);
-        audios[1].Play();
+         audios[1].Play();
     }
-
+   
     static public void ChangeColors(DoublyNode<GameObject> Node, Sprite sp) {
         if (Node.Next != null) {
             ChangeColors(Node.Next, Node.Data.GetComponentInChildren<SpriteRenderer>().sprite);
+        } else {
+            GameObject spawner = GameObject.Find("Spawner");
+            spawner.GetComponent<Spawner>().SpawnFromController(Node.Data.GetComponentInChildren<SpriteRenderer>().sprite, Node.Data.transform.position);  
         }
         Node.Data.GetComponentInChildren<SpriteRenderer>().sprite = sp;
     }
@@ -100,7 +99,8 @@ public class Controller : MonoBehaviour
         if (CurrNode is DoublyNode<GameObject>) {
             if (CurrNode.Next != null) {
                 ChangeColors(CurrNode.Next, CurrNode.Data.GetComponentInChildren<SpriteRenderer>().sprite);
-            }
+            }         
+            
             CurrNode.Data.GetComponentInChildren<SpriteRenderer>().sprite = sp;
         }
     }
