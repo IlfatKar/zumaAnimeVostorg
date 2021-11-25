@@ -5,15 +5,16 @@ using UnityEngine;
 public class Frog : MonoBehaviour {
     private GameObject Curr;
     public GameObject Projectile;
-
+    float Delay = 0.3f;
+    float DelayTimer = 0;
     void Start() {
         Sprite sprite = Controller.Sprites[Random.Range(0, Controller.Sprites.Length)];
         Curr = Instantiate(Projectile, new Vector3(transform.position.x, transform.position.y, -1), transform.rotation);
+        Curr.GetComponent<Rigidbody2D>().simulated = false;
         Curr.SendMessage("SetSprite", sprite);
     }
 
     void Update() {
-        
         OnClick();
         Rotate();
     }
@@ -36,14 +37,20 @@ public class Frog : MonoBehaviour {
     }
 
     void OnClick() {
-        if (Input.GetMouseButtonDown(0)){
-            GetComponent<AudioSource>().Play();
-            float Angle = GetAngleToMouse();
+        DelayTimer += Time.deltaTime;
+        if (DelayTimer >= Delay) {
+            if (Input.GetMouseButtonDown(0)){
+                GetComponent<AudioSource>().Play();
+                float Angle = GetAngleToMouse();
 
-            Curr.SendMessage("Push", Angle);
-            Sprite sprite = Controller.Sprites[Random.Range(0, Controller.Sprites.Length)];
-            Curr = Instantiate(Projectile, new Vector3(transform.position.x, transform.position.y, -1), transform.rotation);
-            Curr.SendMessage("SetSprite", sprite);
+                Curr.GetComponent<Rigidbody2D>().simulated = true;
+                Curr.SendMessage("Push", Angle);
+                Sprite sprite = Controller.Sprites[Random.Range(0, Controller.Sprites.Length)];
+                Curr = Instantiate(Projectile, new Vector3(transform.position.x, transform.position.y, -1), transform.rotation);
+                Curr.GetComponent<Rigidbody2D>().simulated = false;
+                Curr.SendMessage("SetSprite", sprite);
+                DelayTimer = 0;
+            }
         }
     }
 }

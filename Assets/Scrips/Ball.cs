@@ -13,7 +13,6 @@ public class Ball : MonoBehaviour
     [HideInInspector]
     public DoublyNode<GameObject> BallInList = null;
     public float MaxDistance = 1.3f;
-    public Vector3[] LastPos = {new Vector3(0,0,0), new Vector3(0,0,0)};
     void Update(){
         if (!isStop) {
             Move();
@@ -31,8 +30,6 @@ public class Ball : MonoBehaviour
     IEnumerator YieldOneSecond(){
         while (Application.isPlaying && BallInList.Next == null)
         {
-            LastPos[0] = LastPos[1];
-            LastPos[1] = transform.position;
             yield return new WaitForSecondsRealtime(.5f);
         }
     }

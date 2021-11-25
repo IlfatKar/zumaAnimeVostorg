@@ -86,13 +86,13 @@ public class Controller : MonoBehaviour
     static public void ChangeColors(DoublyNode<GameObject> Node, Sprite sp) {
         if (Node.Next != null) {
             ChangeColors(Node.Next, Node.Data.GetComponentInChildren<SpriteRenderer>().sprite);
-        } else {
+        } /*else {
             GameObject spawner = GameObject.Find("Spawner");
             spawner.GetComponent<Spawner>().SpawnFromController(
                 Node.Data.GetComponentInChildren<SpriteRenderer>().sprite, 
-                Node.Data.GetComponent<Ball>().LastPos[1],
+                Node.Data.GetComponent<Ball>().LastPos[0],
                 Node.Data.GetComponent<Ball>().WaypointIdx);  
-        }
+        } */
         Node.Data.GetComponentInChildren<SpriteRenderer>().sprite = sp;
     }
 

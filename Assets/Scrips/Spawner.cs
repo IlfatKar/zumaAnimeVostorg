@@ -12,6 +12,7 @@ public class Spawner : MonoBehaviour
     static private bool isDelayX = false; 
     public int MaxBalls = 30;
     private int SpawnedCount = 0;
+   
     void Start(){
         Delay = _delay;
         FirstDelay = Delay;
