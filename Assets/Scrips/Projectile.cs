@@ -11,7 +11,12 @@ public class Projectile : MonoBehaviour
 
     void Update(){
         if (isMove) {
-            float angle = transform.eulerAngles.z * Mathf.Deg2Rad;
+            Move();
+        }  
+    }
+
+    void Move() {
+        float angle = transform.eulerAngles.z * Mathf.Deg2Rad;
             float sin = Mathf.Sin(angle);
             float cos = Mathf.Cos(angle);
  
@@ -21,7 +26,6 @@ public class Projectile : MonoBehaviour
                 -1);
  
             transform.position += forward * shotSpeed * Time.deltaTime;
-        }  
     }
 
     void SetSprite(Sprite sp) {
@@ -36,10 +40,10 @@ public class Projectile : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision) {
         if(collision.gameObject.tag == "Ball"){
             Sprite sp = GetComponentInChildren<SpriteRenderer>().sprite;
-            collision.gameObject.SendMessage("ChangeNext", sp);
-            Spawner.Wait();
             Destroy(gameObject);
-            Controller.DestroyBalls();
+            Controller.ChangeColors(collision.gameObject, sp);
+            Controller.DestroyBalls(collision.gameObject);
+            Spawner.Wait();
         }
     }
 }

@@ -18,14 +18,20 @@ public class Frog : MonoBehaviour {
         OnClick();   
     }
 
-    void OnClick() {
+    float GetAngleToMouse() {
         var MousePosition = Input.mousePosition;
         MousePosition = Camera.main.ScreenToWorldPoint(MousePosition);
         float Angle = Vector2.Angle(Vector2.right, MousePosition - transform.position);
+        return Angle = transform.position.y < MousePosition.y ? Angle : -Angle;
+    }
+
+    void OnClick() {
         if (Input.GetMouseButtonDown(0)){
-            Angle = transform.position.y < MousePosition.y ? Angle : -Angle;
+            float Angle = GetAngleToMouse();
+
             Curr.SendMessage("Push", Angle);
             Curr = Instantiate(Projectile, new Vector3(transform.position.x + deltaX, transform.position.y + deltaY, 1), transform.rotation);
+            
             Sprite sprite = Controller.Sprites[Random.Range(0, Controller.Sprites.Length - 1)];
             Curr.SendMessage("SetSprite", sprite);
         }

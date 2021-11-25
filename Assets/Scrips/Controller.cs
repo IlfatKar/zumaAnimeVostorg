@@ -9,43 +9,77 @@ public class Controller : MonoBehaviour
     public GameObject _ballPrefab;
     static public Sprite[] Sprites;
     public Sprite[] _sprites;
-    static private int combo = 0;
 
-    void Start() {
-        BallPrefab = _ballPrefab;
+    void Awake() {
         Sprites = _sprites;
+        BallPrefab = _ballPrefab;
     }
 
-    static public void DestroyBalls() {
-        combo = 0;
-        CheckBall(BallsList.head);
-    }
+    static public void DestroyBalls(GameObject curr) {
+        var CurrBall = BallsList.Contains(curr);
 
-    static private void CheckBall(DoublyNode<GameObject> Node) {
-        if(Node.Next != null && Node.Data.GetComponentInChildren<SpriteRenderer>().sprite.name 
-            == Node.Next.Data.GetComponentInChildren<SpriteRenderer>().sprite.name) {
-            combo++;
-            if(combo >= 3) {
-                DelBalls(Node);  
+        if (CurrBall is DoublyNode<GameObject>) {
+            if(CurrBall != BallsList.head && CurrBall != BallsList.tail){
+                if (NodeGetSprite(CurrBall) == NodeGetSprite(CurrBall.Next) && NodeGetSprite(CurrBall.Previous) == NodeGetSprite(CurrBall)) {
+                    Destroy(CurrBall.Data.gameObject);
+                    Destroy(CurrBall.Next.Data.gameObject);
+                    Destroy(CurrBall.Previous.Data.gameObject);
+                    BallsList.Remove(CurrBall.Data);
+                    BallsList.Remove(CurrBall.Next.Data);
+                    BallsList.Remove(CurrBall.Previous.Data);
+                    return;
+                }
+            } 
+            if (CurrBall.Next != null && CurrBall.Next.Next != null) {
+                if (NodeGetSprite(CurrBall) == NodeGetSprite(CurrBall.Next) && NodeGetSprite(CurrBall.Next.Next) == NodeGetSprite(CurrBall)) {
+                    Destroy(CurrBall.Data.gameObject);
+                    Destroy(CurrBall.Next.Data.gameObject);
+                    Destroy(CurrBall.Next.Next.Data.gameObject);
+                    BallsList.Remove(CurrBall.Data);
+                    BallsList.Remove(CurrBall.Next.Data);
+                    BallsList.Remove(CurrBall.Next.Next.Data);
+
+                    return;
+                }
             }
-        } 
-        if(Node.Next != null) {
-            CheckBall(Node.Next);
-        }
-    }
-    static private void DelBalls(DoublyNode<GameObject> Node) {
-        if(combo > 0) {
-             if(Node.Previous != null) {
-                Node.Previous.Next = Node.Next != null ? Node.Next.Next : null;
-            } else {
-                BallsList.head = Node.Next != null ? Node.Next : null;
+            if (CurrBall.Previous != null && CurrBall.Previous.Previous != null) {
+                if (NodeGetSprite(CurrBall) == NodeGetSprite(CurrBall.Previous) && NodeGetSprite(CurrBall.Previous.Previous) == NodeGetSprite(CurrBall)) {
+                    Destroy(CurrBall.Data.gameObject);
+                    Destroy(CurrBall.Previous.Data.gameObject);
+                    Destroy(CurrBall.Previous.Previous.Data.gameObject);
+                    BallsList.Remove(CurrBall.Data);
+                    BallsList.Remove(CurrBall.Previous.Data);
+                    BallsList.Remove(CurrBall.Previous.Previous.Data);
+                    
+                    return;
+                }
             }
-            Destroy(Node.Data.gameObject);
-            combo--;
-            DelBalls(Node.Previous);
+            
         }
+        //CheckBall(BallsList.head);
     }
 
+    static public void ChangeColors(DoublyNode<GameObject> Node, Sprite sp) {
+        if (Node.Next != null) {
+            ChangeColors(Node.Next, Node.Data.GetComponentInChildren<SpriteRenderer>().sprite);
+        }
+        Node.Data.GetComponentInChildren<SpriteRenderer>().sprite = sp;
+    }
+
+    static public void ChangeColors(GameObject curr, Sprite sp) {
+        var CurrNode = BallsList.Contains(curr);
+        if (CurrNode is DoublyNode<GameObject>) {
+            if (CurrNode.Next != null) {
+                ChangeColors(CurrNode.Next, CurrNode.Data.GetComponentInChildren<SpriteRenderer>().sprite);
+            }
+            CurrNode.Data.GetComponentInChildren<SpriteRenderer>().sprite = sp;
+        }
+        
+    }
+
+    static private string NodeGetSprite(DoublyNode<GameObject> Node) {
+        return Node.Data.GetComponentInChildren<SpriteRenderer>().sprite.name;
+    }
 }
 
 public class DoublyNode<T>

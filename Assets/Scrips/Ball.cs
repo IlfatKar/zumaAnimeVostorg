@@ -27,7 +27,6 @@ public class Ball : MonoBehaviour
         }
     }
 
-
     void SetWaypoints(Transform[] points) {
         Waypoints = points;
     }

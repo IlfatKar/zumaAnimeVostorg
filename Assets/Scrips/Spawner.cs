@@ -34,14 +34,16 @@ public class Spawner : MonoBehaviour
         }
         b.SendMessage("SetWaypoints", Waypoints);
         Sprite sp = Controller.Sprites[Random.Range(0, Controller.Sprites.Length - 1)];
-        while (Controller.BallsList.count >= 2 && sp.name == Controller.BallsList.tail.Data.GetComponentInChildren<SpriteRenderer>().sprite.name && 
+
+         while (Controller.BallsList.count >= 2 && sp.name == Controller.BallsList.tail.Data.GetComponentInChildren<SpriteRenderer>().sprite.name && 
             sp.name == Controller.BallsList.tail.Previous.Data.GetComponentInChildren<SpriteRenderer>().sprite.name) {
             sp = Controller.Sprites[Random.Range(0, Controller.Sprites.Length - 1)];
         }
+
         b.SendMessage("SetSprite", sp);
         Controller.BallsList.Add(b);
     }
-    
+
     static public void Wait() {
         Delay = FirstDelay * 2;
         isDelayX = true;
