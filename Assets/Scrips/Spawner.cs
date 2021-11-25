@@ -45,9 +45,10 @@ public class Spawner : MonoBehaviour
         SpawnedCount++;
     }
 
-    public void SpawnFromController(Sprite sprite, Vector3 pos) {
+    public void SpawnFromController(Sprite sprite, Vector3 pos, int WaypointIdx) {
         GameObject b = Instantiate(Controller.BallPrefab, pos, Quaternion.identity);
         b.SendMessage("SetWaypoints", Waypoints);
+        b.SendMessage("SetWaypointIdx", WaypointIdx);
 
         b.SendMessage("SetSprite", sprite);
 
