@@ -10,7 +10,15 @@ public class Controller : MonoBehaviour
     static public Sprite[] Sprites;
     public Sprite[] _sprites;
     static private AudioSource[] audios;
+    public GameObject OverMenu;
+    static public GameObject Over;
+    public GameObject WinMenu;
+    static public GameObject Win;
+
     void Awake() {
+        BallsList = new DoublyLinkedList<GameObject>();
+        Over = OverMenu;
+        Win = WinMenu;
         Sprites = _sprites;
         BallPrefab = _ballPrefab;
         audios = GetComponents<AudioSource>();
@@ -59,59 +67,21 @@ public class Controller : MonoBehaviour
             lastSprite = Node.Data.GetComponentInChildren<SpriteRenderer>().sprite.name;
             Node = Node.Next;
         }
-    }
-
-    static public void _DestroyBalls(GameObject curr) {
-        DoublyNode<GameObject> CurrBall = BallsList.Contains(curr);
-
-        // PIZDEC NEED FIX
-        if (CurrBall != null) {
-            if(CurrBall != BallsList.head && CurrBall != BallsList.tail){
-                if (NodeGetSprite(CurrBall) == NodeGetSprite(CurrBall.Next) && NodeGetSprite(CurrBall.Previous) == NodeGetSprite(CurrBall)) {
-                    DestroyAndRemove(CurrBall, CurrBall.Next, CurrBall.Previous);
-                    DoublyNode<GameObject> c = CurrBall.Previous;
-                    while (c != null) {
-                        c.Data.SendMessage("GoBack");
-                        c = c.Previous;
-                    }
-                    return;
-                }
-            } 
-            if (CurrBall.Next != null && CurrBall.Next.Next != null) {
-                if (NodeGetSprite(CurrBall) == NodeGetSprite(CurrBall.Next) && NodeGetSprite(CurrBall.Next.Next) == NodeGetSprite(CurrBall)) {
-                    DestroyAndRemove(CurrBall, CurrBall.Next, CurrBall.Next.Next);
-                    DoublyNode<GameObject> c = CurrBall;
-                    while (c != null) {
-                        c.Data.SendMessage("GoBack");
-                        c = c.Previous;
-                    }
-                    return;
-                }
-            }
-            if (CurrBall.Previous != null && CurrBall.Previous.Previous != null) {
-                if (NodeGetSprite(CurrBall) == NodeGetSprite(CurrBall.Previous) && NodeGetSprite(CurrBall.Previous.Previous) == NodeGetSprite(CurrBall)) {
-                    DestroyAndRemove(CurrBall, CurrBall.Previous, CurrBall.Previous.Previous);
-                    DoublyNode<GameObject> c = CurrBall.Previous.Previous;
-                    while (c != null) {
-                        c.Data.SendMessage("GoBack");
-                        c = c.Previous;
-                    }
-                    return;
-                }
-            }
+        if (BallsList.count == 0) {
+            GameWin();
         }
     }
 
-    static private void DestroyAndRemove(DoublyNode<GameObject> Node1, DoublyNode<GameObject> Node2, DoublyNode<GameObject> Node3) {
-         Destroy(Node1.Data.gameObject);
-         Destroy(Node2.Data.gameObject);
-         Destroy(Node3.Data.gameObject);
-         BallsList.Remove(Node1.Data);
-         BallsList.Remove(Node2.Data);
-         BallsList.Remove(Node3.Data);
-         audios[1].Play();
+    static public void GameOver() {
+        Time.timeScale = 0;
+        Over.SetActive(true);
     }
-   
+
+    static public void GameWin() {
+        Time.timeScale = 0;
+        Win.SetActive(true);
+    }
+
     static public void ChangeColors(DoublyNode<GameObject> Node, Sprite sp) {
         if (Node.Next != null) {
             ChangeColors(Node.Next, Node.Data.GetComponentInChildren<SpriteRenderer>().sprite);

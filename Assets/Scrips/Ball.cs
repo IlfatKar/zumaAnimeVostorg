@@ -42,6 +42,7 @@ public class Ball : MonoBehaviour
         }
         if (WaypointIdx == Waypoints.Length) {
             WaypointIdx = 0;
+            Controller.GameOver();
             // GAME OVER
         }
     }
