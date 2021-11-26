@@ -6,28 +6,53 @@ public class Ball : MonoBehaviour
 {
     private Transform[] Waypoints;
     public float MoveSpeed = 2f;
+    public float MoveSpeedMult = 1f;
     [HideInInspector]
     public int WaypointIdx = 0;
     [HideInInspector]
-    public GameObject NextBall = null;
-    private bool isStop = false;
-
+    public bool isStop = false;
+    [HideInInspector]
+    public DoublyNode<GameObject> BallInList = null;
+    public float MaxDistance = 1.3f;
+    private bool isHidden = false;
     void Update(){
         if (!isStop) {
             Move();
+             if (!(Controller.DistanceToNext(BallInList) < MaxDistance)) {
+                isStop = true;
+            }
+        } else {
+            if (Controller.DistanceToNext(BallInList) < MaxDistance && Controller.IsNextsMove(BallInList)) {
+                isStop = false;
+            }
+        }
+        if (isHidden) {
+            if (Controller.DistanceToPrev(BallInList) < MaxDistance) {
+                SetHidden(false);
+            }
+        }
+    }
+
+    private void Start(){
+        StartCoroutine(YieldOneSecond());
+    }
+
+    IEnumerator YieldOneSecond(){
+        while (Application.isPlaying && BallInList.Next == null)
+        {
+            yield return new WaitForSecondsRealtime(.5f);
         }
     }
 
     void Move() {
         transform.position = Vector2.MoveTowards(transform.position,
-            Waypoints[WaypointIdx].transform.position, MoveSpeed * Time.deltaTime);
-        if(Vector2.Distance(transform.position, Waypoints[WaypointIdx].transform.position) <= .5f) {
-            //Rotate();
+            Waypoints[WaypointIdx].transform.position, MoveSpeed * MoveSpeedMult * Time.deltaTime);
+        if(Vector2.Distance(transform.position, Waypoints[WaypointIdx].transform.position) <= 1f) {
             WaypointIdx++;
         }
         if (WaypointIdx == Waypoints.Length) {
             WaypointIdx = 0;
-            // GAME OVER
+            Controller.GameOver();
         }
     }
 
@@ -43,18 +68,22 @@ public class Ball : MonoBehaviour
         WaypointIdx = Idx;
     }
 
-    void OnCollisionEnter2D(Collision2D collision) {
-        if (isStop && collision.gameObject.tag != "Line") {
-            isStop = false;
-        }
-    }
-
-    void SetNext(GameObject Next) {
-        NextBall = Next;
+    void SetBallInList(DoublyNode<GameObject> ball) {
+        BallInList = ball;
     }
 
     void GoBack() {
         isStop = true;
     }
 
+    void SetHidden(bool b) {
+        GetComponentInChildren<SpriteRenderer>().color = b ? new Color(255,255,255,0) : new Color(255,255,255,1);
+        if (b) {
+            isHidden = true;
+            MoveSpeedMult = 10f * (Controller.BallsList.tail.Previous.Data.GetComponent<Ball>().WaypointIdx - WaypointIdx);
+        } else {
+            isHidden = false;
+            MoveSpeedMult = 1f;
+        }
+    }
 }

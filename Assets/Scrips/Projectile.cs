@@ -5,6 +5,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     private bool isMove = false;
+    [HideInInspector]
     public Vector3 direction = Vector3.right;
     public float shotSpeed = 4f;
     void Start(){}    
@@ -12,13 +13,7 @@ public class Projectile : MonoBehaviour
     void Update(){
         if (isMove) {
             Move();
-        } else {
-            Rotate();
-        }
-    }
-
-    void Rotate() {
-     
+        } 
     }
 
     void Move() {
@@ -29,7 +24,7 @@ public class Projectile : MonoBehaviour
             Vector3 forward = new Vector3(
                 direction.x * cos - direction.y * sin,
                 direction.x * sin + direction.y * cos,
-                -1);
+                0);
  
             transform.position += forward * shotSpeed * Time.deltaTime;
     }
@@ -46,12 +41,12 @@ public class Projectile : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision) {
         if(collision.gameObject.tag == "Ball"){
             Sprite sp = GetComponentInChildren<SpriteRenderer>().sprite;
-
             
             Destroy(gameObject);
 
             Controller.ChangeColors(collision.gameObject, sp);
-            Controller.DestroyBalls(collision.gameObject);
+            Controller.DestroyBalls();
+ 
             Spawner.Wait();
         }
     }

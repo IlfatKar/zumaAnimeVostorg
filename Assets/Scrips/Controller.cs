@@ -10,66 +10,108 @@ public class Controller : MonoBehaviour
     static public Sprite[] Sprites;
     public Sprite[] _sprites;
     static private AudioSource[] audios;
+    public GameObject OverMenu;
+    static public GameObject Over;
+    public GameObject WinMenu;
+    static public GameObject Win;
+
     void Awake() {
+        BallsList = new DoublyLinkedList<GameObject>();
+        Over = OverMenu;
+        Win = WinMenu;
         Sprites = _sprites;
         BallPrefab = _ballPrefab;
         audios = GetComponents<AudioSource>();
     }
 
-    static public void DestroyBalls(GameObject curr) {
-        var CurrBall = BallsList.Contains(curr);
-
-        if (CurrBall is DoublyNode<GameObject>) {
-            if(CurrBall != BallsList.head && CurrBall != BallsList.tail){
-                if (NodeGetSprite(CurrBall) == NodeGetSprite(CurrBall.Next) && NodeGetSprite(CurrBall.Previous) == NodeGetSprite(CurrBall)) {
-                    DestroyAndRemove(CurrBall, CurrBall.Next, CurrBall.Previous);
-                    DoublyNode<GameObject> c = CurrBall.Previous;
-                    while (c != null) {
-                        c.Data.SendMessage("GoBack");
-                        c = c.Previous;
-                    }
-                    return;
-                }
-            } 
-            if (CurrBall.Next != null && CurrBall.Next.Next != null) {
-                if (NodeGetSprite(CurrBall) == NodeGetSprite(CurrBall.Next) && NodeGetSprite(CurrBall.Next.Next) == NodeGetSprite(CurrBall)) {
-                    DestroyAndRemove(CurrBall, CurrBall.Next, CurrBall.Next.Next);
-                    DoublyNode<GameObject> c = CurrBall;
-                    while (c != null) {
-                        c.Data.SendMessage("GoBack");
-                        c = c.Previous;
-                    }
-                    return;
-                }
-            }
-            if (CurrBall.Previous != null && CurrBall.Previous.Previous != null) {
-                if (NodeGetSprite(CurrBall) == NodeGetSprite(CurrBall.Previous) && NodeGetSprite(CurrBall.Previous.Previous) == NodeGetSprite(CurrBall)) {
-                    DestroyAndRemove(CurrBall, CurrBall.Previous, CurrBall.Previous.Previous);
-                    DoublyNode<GameObject> c = CurrBall.Previous.Previous;
-                    while (c != null) {
-                        c.Data.SendMessage("GoBack");
-                        c = c.Previous;
-                    }
-                    return;
-                }
-            }
+    static public float DistanceToNext(DoublyNode<GameObject> curr) {
+        if (curr.Next != null) {
+            return Vector2.Distance(curr.Data.transform.position, curr.Next.Data.transform.position);
+        } else {
+            return 0f;
         }
     }
 
-    static private void DestroyAndRemove(DoublyNode<GameObject> Node1, DoublyNode<GameObject> Node2, DoublyNode<GameObject> Node3) {
-         Destroy(Node1.Data.gameObject);
-         Destroy(Node2.Data.gameObject);
-         Destroy(Node3.Data.gameObject);
-         BallsList.Remove(Node1.Data);
-         BallsList.Remove(Node2.Data);
-         BallsList.Remove(Node3.Data);
-        audios[1].Play();
+     static public float DistanceToPrev(DoublyNode<GameObject> curr) {
+        if (curr.Previous != null) {
+            return Vector2.Distance(curr.Data.transform.position, curr.Previous.Data.transform.position);
+        } else {
+            return 0f;
+        }
+    }
+
+    static public bool IsNextsMove(DoublyNode<GameObject> curr) {
+        DoublyNode<GameObject> c = curr;
+        if (c.Next != null && c.Next.Data.GetComponent<Ball>().isStop) {
+            return false;
+        }
+        return true;
+    }
+
+    static public void DestroyBalls() {
+        DoublyNode<GameObject> Node = BallsList.head;
+        int combo = 0;
+        string lastSprite = "";
+        while(Node.Next != null) {
+            if (lastSprite == Node.Data.GetComponentInChildren<SpriteRenderer>().sprite.name) {
+                combo++;
+            } else {
+                if (combo >= 2) {
+                    DoublyNode<GameObject> tmp = Node.Previous;
+                    for (int i = 0; i <= combo; i++) {
+                        Destroy(tmp.Data.gameObject);
+                        BallsList.Remove(tmp.Data);
+                        tmp = tmp.Previous;
+                    } 
+                    tmp = Node;
+                    while (tmp != null) {
+                        tmp.Data.SendMessage("GoBack");
+                        tmp = tmp.Previous;
+                    }
+                    audios[1].Play();
+                } 
+                combo = 0;
+            }
+            lastSprite = Node.Data.GetComponentInChildren<SpriteRenderer>().sprite.name;
+            Node = Node.Next;
+        }
+        if(combo >= 2) {
+            DoublyNode<GameObject> tmp = Node.Previous;
+            for (int i = 0; i <= combo; i++) {
+                Destroy(tmp.Data.gameObject);
+                BallsList.Remove(tmp.Data);
+                tmp = tmp.Previous;
+            } 
+            tmp = Node;
+            while (tmp != null) {
+                tmp.Data.SendMessage("GoBack");
+                tmp = tmp.Previous;
+            }
+            audios[1].Play();
+        }
+        if (BallsList.count <= 1) {
+            GameWin();
+        }
+    }
+
+    static public void GameOver() {
+        Time.timeScale = 0;
+        Over.SetActive(true);
+    }
+
+    static public void GameWin() {
+        GameObject.Destroy(BallsList.head.Data);
+        Time.timeScale = 0;
+        Win.SetActive(true);
     }
 
     static public void ChangeColors(DoublyNode<GameObject> Node, Sprite sp) {
         if (Node.Next != null) {
             ChangeColors(Node.Next, Node.Data.GetComponentInChildren<SpriteRenderer>().sprite);
-        }
+        } else {
+            GameObject spawner = GameObject.Find("Spawner");
+            spawner.GetComponent<Spawner>().SpawnFromController(Node.Data.GetComponentInChildren<SpriteRenderer>().sprite);  
+        } 
         Node.Data.GetComponentInChildren<SpriteRenderer>().sprite = sp;
     }
 
@@ -79,7 +121,11 @@ public class Controller : MonoBehaviour
         if (CurrNode is DoublyNode<GameObject>) {
             if (CurrNode.Next != null) {
                 ChangeColors(CurrNode.Next, CurrNode.Data.GetComponentInChildren<SpriteRenderer>().sprite);
-            }
+            } else {
+                GameObject spawner = GameObject.Find("Spawner");
+                spawner.GetComponent<Spawner>().SpawnFromController(CurrNode.Data.GetComponentInChildren<SpriteRenderer>().sprite);  
+            }      
+            
             CurrNode.Data.GetComponentInChildren<SpriteRenderer>().sprite = sp;
         }
     }

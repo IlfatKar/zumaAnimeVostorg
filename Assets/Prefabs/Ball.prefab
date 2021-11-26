@@ -84,8 +84,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MoveSpeed: 1.5
+  MoveSpeedMult: 1
   WaypointIdx: 0
-  NextBall: {fileID: 0}
+  isStop: 0
+  MaxDistance: 1.5
 --- !u!1 &7751765215432089382
 GameObject:
   m_ObjectHideFlags: 0

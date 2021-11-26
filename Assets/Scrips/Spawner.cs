@@ -5,33 +5,27 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     public Transform[] Waypoints;
-    static public float Delay = 0.5f;
-    public float _delay = 0.5f;
-    float DelayTimer = 0;
-    static private float FirstDelay = 0.5f;
-    static private bool isDelayX = false; 
+    public float Delay = 0.5f;
+    static private float _dealy = 0.5f;
+    static float DelayTimer = 0;
+    public int MaxBalls = 30;
+    private int SpawnedCount = 0;
+   
     void Start(){
-        Delay = _delay;
-        FirstDelay = Delay;
+        _dealy = Delay;
+        DelayTimer = 0;
     }
 
     void Update(){
         DelayTimer += Time.deltaTime;
-        if (DelayTimer >= Delay) {
-            DelayTimer -= Delay;
+        if (DelayTimer >= Delay && SpawnedCount < MaxBalls) {
+            DelayTimer = 0;
             Spawn();
-        }
-        if(isDelayX) {
-            Delay = Delay / 2;
-            isDelayX = false;
         }
     }
     void Spawn() {
         GameObject b = Instantiate(Controller.BallPrefab, new Vector3(transform.position.x, transform.position.y, -1), 
             Quaternion.identity);
-        if (Controller.BallsList.count >= 1) {
-            Controller.BallsList.tail.Data.SendMessage("SetNext", b);
-        }
         b.SendMessage("SetWaypoints", Waypoints);
         Sprite sp = Controller.Sprites[Random.Range(0, Controller.Sprites.Length )];
 
@@ -42,10 +36,22 @@ public class Spawner : MonoBehaviour
 
         b.SendMessage("SetSprite", sp);
         Controller.BallsList.Add(b);
+        b.SendMessage("SetBallInList", Controller.BallsList.tail);
+        SpawnedCount++;
+    }
+
+    public void SpawnFromController(Sprite sprite) {
+        GameObject b = Instantiate(Controller.BallPrefab, new Vector3(transform.position.x, transform.position.y, -1), Quaternion.identity);
+        b.SendMessage("SetWaypoints", Waypoints);
+
+        b.SendMessage("SetSprite", sprite);
+
+        Controller.BallsList.Add(b);
+        b.SendMessage("SetHidden", true);
+        b.SendMessage("SetBallInList", Controller.BallsList.tail);
     }
 
     static public void Wait() {
-        Delay = FirstDelay * 2;
-        isDelayX = true;
+        DelayTimer = -.5f * _dealy;
     }
 }
