@@ -5,28 +5,22 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     public Transform[] Waypoints;
-    static public float Delay = 0.5f;
-    public float _delay = 0.5f;
-    float DelayTimer = 0;
-    static private float FirstDelay = 0.5f;
-    static private bool isDelayX = false; 
+    public float Delay = 0.5f;
+    static private float _dealy = 0.5f;
+    static float DelayTimer = 0;
     public int MaxBalls = 30;
     private int SpawnedCount = 0;
    
     void Start(){
-        Delay = _delay;
-        FirstDelay = Delay;
+        _dealy = Delay;
+        DelayTimer = 0;
     }
 
     void Update(){
         DelayTimer += Time.deltaTime;
         if (DelayTimer >= Delay && SpawnedCount < MaxBalls) {
-            DelayTimer -= Delay;
+            DelayTimer = 0;
             Spawn();
-        }
-        if(isDelayX) {
-            Delay = Delay / 2;
-            isDelayX = false;
         }
     }
     void Spawn() {
@@ -58,7 +52,6 @@ public class Spawner : MonoBehaviour
     }
 
     static public void Wait() {
-        Delay = FirstDelay * 2;
-        isDelayX = true;
+        DelayTimer = -.5f * _dealy;
     }
 }

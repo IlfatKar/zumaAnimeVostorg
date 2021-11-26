@@ -18,6 +18,9 @@ public class Ball : MonoBehaviour
     void Update(){
         if (!isStop) {
             Move();
+             if (!(Controller.DistanceToNext(BallInList) < MaxDistance)) {
+                isStop = true;
+            }
         } else {
             if (Controller.DistanceToNext(BallInList) < MaxDistance && Controller.IsNextsMove(BallInList)) {
                 isStop = false;
@@ -44,7 +47,7 @@ public class Ball : MonoBehaviour
     void Move() {
         transform.position = Vector2.MoveTowards(transform.position,
             Waypoints[WaypointIdx].transform.position, MoveSpeed * MoveSpeedMult * Time.deltaTime);
-        if(Vector2.Distance(transform.position, Waypoints[WaypointIdx].transform.position) <= .5f) {
+        if(Vector2.Distance(transform.position, Waypoints[WaypointIdx].transform.position) <= 1f) {
             WaypointIdx++;
         }
         if (WaypointIdx == Waypoints.Length) {
@@ -77,7 +80,7 @@ public class Ball : MonoBehaviour
         GetComponentInChildren<SpriteRenderer>().color = b ? new Color(255,255,255,0) : new Color(255,255,255,1);
         if (b) {
             isHidden = true;
-            MoveSpeedMult = 20f;
+            MoveSpeedMult = 10f * (Controller.BallsList.tail.Previous.Data.GetComponent<Ball>().WaypointIdx - WaypointIdx);
         } else {
             isHidden = false;
             MoveSpeedMult = 1f;

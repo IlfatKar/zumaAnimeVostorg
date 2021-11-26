@@ -24,7 +24,7 @@ public class Projectile : MonoBehaviour
             Vector3 forward = new Vector3(
                 direction.x * cos - direction.y * sin,
                 direction.x * sin + direction.y * cos,
-                -1);
+                0);
  
             transform.position += forward * shotSpeed * Time.deltaTime;
     }

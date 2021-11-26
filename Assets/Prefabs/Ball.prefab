@@ -84,6 +84,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MoveSpeed: 1.5
+  MoveSpeedMult: 1
   WaypointIdx: 0
   isStop: 0
   MaxDistance: 1.5
