@@ -7,5 +7,7 @@ public class StartGame : MonoBehaviour {
 
      void OnMouseDown() {
         SceneManager.LoadScene("FirstLevel");
+        GetComponent<AudioSource>().Play();   
+
      }
 }
