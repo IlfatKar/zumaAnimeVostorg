@@ -5,7 +5,8 @@ using UnityEngine.SceneManagement;
 public class ToSelectLevel : MonoBehaviour
 {
      void OnMouseDown() {        
-
         SceneManager.LoadScene( "LevelSecect");
-    }
+                GetComponent<AudioSource>().Play();   
+ 
+     }
 }
